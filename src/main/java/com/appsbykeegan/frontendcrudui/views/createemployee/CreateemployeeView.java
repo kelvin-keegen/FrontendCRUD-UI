@@ -1,7 +1,6 @@
 package com.appsbykeegan.frontendcrudui.views.createemployee;
 
-import com.appsbykeegan.frontendcrudui.data.entity.SamplePerson;
-import com.appsbykeegan.frontendcrudui.data.service.SamplePersonService;
+import com.appsbykeegan.frontendcrudui.models.EmployeeModel;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -37,28 +36,23 @@ public class CreateemployeeView extends Div {
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private Binder<SamplePerson> binder = new Binder<>(SamplePerson.class);
-
-    public CreateemployeeView(SamplePersonService personService) {
+    public CreateemployeeView() {
         addClassName("createemployee-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
 
-        binder.bindInstanceFields(this);
         clearForm();
 
         cancel.addClickListener(e -> clearForm());
         save.addClickListener(e -> {
-            personService.update(binder.getBean());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
             clearForm();
         });
     }
 
     private void clearForm() {
-        binder.setBean(new SamplePerson());
+
     }
 
     private Component createTitle() {

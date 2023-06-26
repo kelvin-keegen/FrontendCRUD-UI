@@ -1,7 +1,6 @@
 package com.appsbykeegan.frontendcrudui.views.updatedepartment;
 
-import com.appsbykeegan.frontendcrudui.data.entity.SampleAddress;
-import com.appsbykeegan.frontendcrudui.data.service.SampleAddressService;
+import com.appsbykeegan.frontendcrudui.models.DepartmentModel;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -30,23 +29,19 @@ public class UpdatedepartmentView extends Div {
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private Binder<SampleAddress> binder = new Binder<>(SampleAddress.class);
 
-    public UpdatedepartmentView(SampleAddressService addressService) {
+    public UpdatedepartmentView() {
         addClassName("updatedepartment-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
 
-        binder.bindInstanceFields(this);
 
         clearForm();
 
         cancel.addClickListener(e -> clearForm());
         save.addClickListener(e -> {
-            addressService.update(binder.getBean());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " stored.");
             clearForm();
         });
     }
@@ -75,7 +70,7 @@ public class UpdatedepartmentView extends Div {
     }
 
     private void clearForm() {
-        this.binder.setBean(new SampleAddress());
+
     }
 
 }

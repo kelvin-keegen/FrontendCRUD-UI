@@ -1,7 +1,5 @@
 package com.appsbykeegan.frontendcrudui.views.createdepartment;
 
-import com.appsbykeegan.frontendcrudui.data.entity.SampleAddress;
-import com.appsbykeegan.frontendcrudui.data.service.SampleAddressService;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -24,44 +22,30 @@ public class CreatedepartmentView extends Div {
     private TextField street = new TextField("Street address");
     private TextField postalCode = new TextField("Postal code");
     private TextField city = new TextField("City");
-    private ComboBox<String> state = new ComboBox<>("State");
-    private ComboBox<String> country = new ComboBox<>("Country");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private Binder<SampleAddress> binder = new Binder<>(SampleAddress.class);
-
-    public CreatedepartmentView(SampleAddressService addressService) {
+    public CreatedepartmentView() {
         addClassName("createdepartment-view");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
 
-        binder.bindInstanceFields(this);
-
         clearForm();
 
-        cancel.addClickListener(e -> clearForm());
-        save.addClickListener(e -> {
-            addressService.update(binder.getBean());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " stored.");
-            clearForm();
-        });
+        cancel.addClickListener(buttonClickEvent -> clearForm());
+        save.addClickListener(buttonClickEvent -> clearForm());
     }
 
     private Component createTitle() {
-        return new H3("Address");
+        return new H3("Department");
     }
 
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
         formLayout.add(street, 2);
-        postalCode.setAllowedCharPattern("\\d");
-        country.setItems("Country 1", "Country 2", "Country 3");
-        state.setItems("State A", "State B", "State C", "State D");
-        formLayout.add(postalCode, city, state, country);
         return formLayout;
     }
 
@@ -75,7 +59,7 @@ public class CreatedepartmentView extends Div {
     }
 
     private void clearForm() {
-        this.binder.setBean(new SampleAddress());
+        // clear all text fields
     }
 
 }
