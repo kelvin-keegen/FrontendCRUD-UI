@@ -1,7 +1,6 @@
 package com.appsbykeegan.frontendcrudui.service;
 
-import com.appsbykeegan.frontendcrudui.models.EmployeeModel;
-import com.appsbykeegan.frontendcrudui.models.DepartmentResponseTemplate;
+import com.appsbykeegan.frontendcrudui.models.*;
 import com.appsbykeegan.frontendcrudui.models.records.EmployeeRequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,33 +20,62 @@ public class EmployeeRestfulService {
 
     private String backendLink = "http://localhost:7070/employee";
 
+    public EmployeeModel findEmployee(String email) {
+
+        EmployeeResponseTemplate response = webClient.build()
+                .get()
+                .uri(backendLink+"/retrieve?email="+email)
+                .retrieve()
+                .bodyToMono(EmployeeResponseTemplate.class)
+                .block();
+
+        if (response == null) {
+            return null;
+        }
+        int statusCode = response.getStatusCode();
+
+        if (statusCode != 200) {
+            return null;
+        }
+
+        log.info(response.getData().toString());
+        log.info(response.getData().getDepartment().getDepartmentName());
+
+        return response.getData();
+    }
     public List<EmployeeModel> getAllEmployees() {
 
-        List<EmployeeModel> employees = new ArrayList<>();
+        List<EmployeeModel> employees;
 
-        DepartmentResponseTemplate response = webClient.build()
+        EmployeeListResponseTemplate response = webClient.build()
                 .get()
                 .uri(backendLink+"/retrieve")
                 .retrieve()
-                .bodyToMono(DepartmentResponseTemplate.class)
+                .bodyToMono(EmployeeListResponseTemplate.class)
                 .block();
 
-        employees = (List<EmployeeModel>) response.getData();
+        if (response == null) {
+            return null;
+        }
+        int statusCode = response.getStatusCode();
 
-        log.info(Arrays.toString(employees.toArray()));
+        if (statusCode != 200) {
+            return null;
+        }
+        employees = response.getData();
 
         return employees;
     }
 
     public boolean createEmployee(EmployeeRequestBody requestBody) {
 
-        DepartmentResponseTemplate response = webClient.build()
+        EmployeeResponseTemplate response = webClient.build()
                 .post()
                 .uri(backendLink+"/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
-                .bodyToMono(DepartmentResponseTemplate.class)
+                .bodyToMono(EmployeeResponseTemplate.class)
                 .block();
 
         if (response == null) {
@@ -57,7 +83,7 @@ public class EmployeeRestfulService {
             return false;
         }
 
-        int statusCode = (int) response.getStatusCode();
+        int statusCode = response.getStatusCode();
 
         if (statusCode != 200) {
 
@@ -67,13 +93,13 @@ public class EmployeeRestfulService {
         return true;
     }
 
-    public boolean deleteEmployee(String emailAddress) {
+    public boolean deleteEmployee(String email) {
 
-        DepartmentResponseTemplate response = webClient.build()
+        EmployeeResponseTemplate response = webClient.build()
                 .delete()
-                .uri(backendLink+"/delete?name="+emailAddress)
+                .uri(backendLink+"/delete?email="+email)
                 .retrieve()
-                .bodyToMono(DepartmentResponseTemplate.class)
+                .bodyToMono(EmployeeResponseTemplate.class)
                 .block();
 
         if (response == null) {
@@ -81,7 +107,7 @@ public class EmployeeRestfulService {
             return false;
         }
 
-        int statusCode = (int) response.getStatusCode();
+        int statusCode = response.getStatusCode();
 
         if (statusCode != 200) {
 
@@ -91,41 +117,28 @@ public class EmployeeRestfulService {
         return true;
     }
 
-    public boolean UpdateEmployee(EmployeeModel employeeModel) {
+    public boolean UpdateEmployee(EmployeeRequestBody requestBody) {
 
-        EmployeeRequestBody requestBody = new EmployeeRequestBody(
-                employeeModel.getEmployeeFirstName(),
-                employeeModel.getEmployeeLastName(),
-                employeeModel.getEmployeeGender(),
-                employeeModel.getEmployeeRole(),
-                employeeModel.getEmailAddress(),
-                null
-
-        );
-
-        DepartmentResponseTemplate response = webClient.build()
+        EmployeeResponseTemplate response = webClient.build()
                 .put()
                 .uri(backendLink+"/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
-                .bodyToMono(DepartmentResponseTemplate.class)
+                .bodyToMono(EmployeeResponseTemplate.class)
                 .block();
 
         if (response == null) {
 
             return false;
         }
-
-        int statusCode = (int) response.getStatusCode();
+        int statusCode = response.getStatusCode();
 
         if (statusCode != 200) {
 
             return false;
         }
-
         return true;
-
     }
 
 }

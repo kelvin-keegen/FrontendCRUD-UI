@@ -1,6 +1,7 @@
 package com.appsbykeegan.frontendcrudui.views.employees;
 
 import com.appsbykeegan.frontendcrudui.models.EmployeeModel;
+import com.appsbykeegan.frontendcrudui.service.EmployeeRestfulService;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -23,12 +24,15 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Employees")
 @Route(value = "retrieve/employees", layout = MainLayout.class)
 @Uses(Icon.class)
 public class EmployeesView extends Div {
 
+    @Autowired
+    private EmployeeRestfulService employeeRestfulService;
     private Grid<EmployeeModel> grid;
 
     private Filters filters;
@@ -151,7 +155,7 @@ public class EmployeesView extends Div {
         grid.addColumn("emailAddress").setAutoWidth(true);
         grid.addColumn("department").setAutoWidth(true);
 
-        grid.setItems();
+        grid.setItems(employeeRestfulService.getAllEmployees());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
 
