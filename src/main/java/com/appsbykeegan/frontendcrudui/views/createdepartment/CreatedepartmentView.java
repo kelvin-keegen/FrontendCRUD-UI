@@ -1,5 +1,7 @@
 package com.appsbykeegan.frontendcrudui.views.createdepartment;
 
+import com.appsbykeegan.frontendcrudui.models.records.DepartmentRequestBody;
+import com.appsbykeegan.frontendcrudui.service.DepartmentRestfulService;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -9,19 +11,30 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
 
 @PageTitle("Create department")
 @Route(value = "create/department", layout = MainLayout.class)
 public class CreatedepartmentView extends Div {
 
-    private TextField street = new TextField("Street address");
-    private TextField postalCode = new TextField("Postal code");
-    private TextField city = new TextField("City");
+    @Autowired
+    private DepartmentRestfulService departmentRestfulService;
+
+    private TextField departmentName = new TextField("Department Name");
+    private NumberField departmentFloorNumber = new NumberField("Floor Number");
+    private TextArea departmentDescription = new TextArea("Description");
+    private ComboBox<Double> departmentBudget = new ComboBox<>("Budget");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
@@ -36,16 +49,27 @@ public class CreatedepartmentView extends Div {
         clearForm();
 
         cancel.addClickListener(buttonClickEvent -> clearForm());
-        save.addClickListener(buttonClickEvent -> clearForm());
+        save.addClickListener(buttonClickEvent -> {
+
+            createDeptRestFunc();
+        });
     }
 
     private Component createTitle() {
-        return new H3("Department");
+        return new H3("Department information");
     }
 
     private Component createFormLayout() {
+
+        departmentDescription.setPlaceholder("Write department info here...");
+        departmentBudget.setItems(1000.00,10000.00,100000.00,1000000.00);
+
         FormLayout formLayout = new FormLayout();
-        formLayout.add(street, 2);
+        formLayout.add(departmentName);
+        formLayout.add(departmentFloorNumber);
+        formLayout.add(departmentBudget);
+        formLayout.add(departmentDescription,2);
+
         return formLayout;
     }
 
@@ -60,6 +84,36 @@ public class CreatedepartmentView extends Div {
 
     private void clearForm() {
         // clear all text fields
+        departmentName.clear();
+        departmentFloorNumber.clear();
+        departmentDescription.clear();
+        departmentBudget.clear();
+    }
+
+    public void createDeptRestFunc() {
+
+        boolean isSuccessful = false;
+
+        isSuccessful = departmentRestfulService.createDepartment(new DepartmentRequestBody(
+                departmentName.getValue(),
+                departmentFloorNumber.getValue().intValue(),
+                departmentDescription.getValue(),
+                BigDecimal.valueOf(departmentBudget.getValue())
+        ));
+
+        if (isSuccessful) {
+
+            clearForm();
+            Notification notification = Notification.show("Entry Created!");
+            notification.setPosition(Notification.Position.BOTTOM_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+        } else if (!isSuccessful){
+
+            Notification notification = Notification.show("Something went wrong!");
+            notification.setPosition(Notification.Position.BOTTOM_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
 }

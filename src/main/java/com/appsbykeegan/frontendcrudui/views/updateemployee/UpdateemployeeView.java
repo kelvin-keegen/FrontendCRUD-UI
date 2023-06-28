@@ -1,7 +1,11 @@
 package com.appsbykeegan.frontendcrudui.views.updateemployee;
 
 import com.appsbykeegan.frontendcrudui.models.EmployeeModel;
+import com.appsbykeegan.frontendcrudui.models.enums.EmployeeGender;
+import com.appsbykeegan.frontendcrudui.models.enums.EmployeeRole;
 import com.appsbykeegan.frontendcrudui.views.MainLayout;
+import com.appsbykeegan.frontendcrudui.views.createdepartment.CreatedepartmentView;
+import com.appsbykeegan.frontendcrudui.views.createemployee.CreateemployeeView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,6 +18,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,9 +34,8 @@ public class UpdateemployeeView extends Div {
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
     private EmailField email = new EmailField("Email address");
-    private DatePicker dateOfBirth = new DatePicker("Birthday");
-    private PhoneNumberField phone = new PhoneNumberField("Phone number");
-    private TextField occupation = new TextField("Occupation");
+    private ComboBox<EmployeeGender> employeeGender = new ComboBox<>("Gender");
+    private ComboBox<EmployeeRole> employeeRole = new ComboBox<>("Role");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
@@ -42,6 +46,7 @@ public class UpdateemployeeView extends Div {
 
         add(createTitle());
         add(createFormLayout());
+        add(createEmply());
         add(createButtonLayout());
 
         clearForm();
@@ -52,18 +57,28 @@ public class UpdateemployeeView extends Div {
         });
     }
 
+    private Component createEmply() {
+
+        return null;
+    }
+
     private void clearForm() {
 
     }
 
     private Component createTitle() {
-        return new H3("Personal information");
+        return new H3("Update Employee");
     }
 
     private Component createFormLayout() {
+
         FormLayout formLayout = new FormLayout();
         email.setErrorMessage("Please enter a valid email address");
-        formLayout.add(firstName, lastName, dateOfBirth, phone, email, occupation);
+
+        employeeRole.setItems(EmployeeRole.MANAGER,EmployeeRole.PERSONNEL,EmployeeRole.INTERN);
+        employeeGender.setItems(EmployeeGender.MALE,EmployeeGender.FEMALE,EmployeeGender.PREFER_NOT_TO_SAY);
+
+        formLayout.add(firstName, lastName, email,employeeRole,employeeGender);
         return formLayout;
     }
 
@@ -74,48 +89,6 @@ public class UpdateemployeeView extends Div {
         buttonLayout.add(save);
         buttonLayout.add(cancel);
         return buttonLayout;
-    }
-
-    private static class PhoneNumberField extends CustomField<String> {
-        private ComboBox<String> countryCode = new ComboBox<>();
-        private TextField number = new TextField();
-
-        public PhoneNumberField(String label) {
-            setLabel(label);
-            countryCode.setWidth("120px");
-            countryCode.setPlaceholder("Country");
-            countryCode.setAllowedCharPattern("[\\+\\d]");
-            countryCode.setItems("+354", "+91", "+62", "+98", "+964", "+353", "+44", "+972", "+39", "+225");
-            countryCode.addCustomValueSetListener(e -> countryCode.setValue(e.getDetail()));
-            number.setAllowedCharPattern("\\d");
-            HorizontalLayout layout = new HorizontalLayout(countryCode, number);
-            layout.setFlexGrow(1.0, number);
-            add(layout);
-        }
-
-        @Override
-        protected String generateModelValue() {
-            if (countryCode.getValue() != null && number.getValue() != null) {
-                String s = countryCode.getValue() + " " + number.getValue();
-                return s;
-            }
-            return "";
-        }
-
-        @Override
-        protected void setPresentationValue(String phoneNumber) {
-            String[] parts = phoneNumber != null ? phoneNumber.split(" ", 2) : new String[0];
-            if (parts.length == 1) {
-                countryCode.clear();
-                number.setValue(parts[0]);
-            } else if (parts.length == 2) {
-                countryCode.setValue(parts[0]);
-                number.setValue(parts[1]);
-            } else {
-                countryCode.clear();
-                number.clear();
-            }
-        }
     }
 
 }
