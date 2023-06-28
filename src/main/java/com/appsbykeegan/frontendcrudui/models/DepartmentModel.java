@@ -18,5 +18,4 @@ public class DepartmentModel {
     private String departmentDescription;
     private BigDecimal departmentBudget;
     private String departmentCreationDate;
-    private Set<EmployeeModel> employees;
 }

@@ -1,9 +1,7 @@
 package com.appsbykeegan.frontendcrudui.service;
 
-import com.appsbykeegan.frontendcrudui.models.DepartmentModel;
 import com.appsbykeegan.frontendcrudui.models.EmployeeModel;
-import com.appsbykeegan.frontendcrudui.models.ResponseTemplate;
-import com.appsbykeegan.frontendcrudui.models.records.DepartmentRequestBody;
+import com.appsbykeegan.frontendcrudui.models.DepartmentResponseTemplate;
 import com.appsbykeegan.frontendcrudui.models.records.EmployeeRequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +27,11 @@ public class EmployeeRestfulService {
 
         List<EmployeeModel> employees = new ArrayList<>();
 
-        ResponseTemplate response = webClient.build()
+        DepartmentResponseTemplate response = webClient.build()
                 .get()
                 .uri(backendLink+"/retrieve")
                 .retrieve()
-                .bodyToMono(ResponseTemplate.class)
+                .bodyToMono(DepartmentResponseTemplate.class)
                 .block();
 
         employees = (List<EmployeeModel>) response.getData();
@@ -45,13 +43,13 @@ public class EmployeeRestfulService {
 
     public boolean createEmployee(EmployeeRequestBody requestBody) {
 
-        ResponseTemplate response = webClient.build()
+        DepartmentResponseTemplate response = webClient.build()
                 .post()
                 .uri(backendLink+"/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
-                .bodyToMono(ResponseTemplate.class)
+                .bodyToMono(DepartmentResponseTemplate.class)
                 .block();
 
         if (response == null) {
@@ -71,11 +69,11 @@ public class EmployeeRestfulService {
 
     public boolean deleteEmployee(String emailAddress) {
 
-        ResponseTemplate response = webClient.build()
+        DepartmentResponseTemplate response = webClient.build()
                 .delete()
                 .uri(backendLink+"/delete?name="+emailAddress)
                 .retrieve()
-                .bodyToMono(ResponseTemplate.class)
+                .bodyToMono(DepartmentResponseTemplate.class)
                 .block();
 
         if (response == null) {
@@ -105,13 +103,13 @@ public class EmployeeRestfulService {
 
         );
 
-        ResponseTemplate response = webClient.build()
+        DepartmentResponseTemplate response = webClient.build()
                 .put()
                 .uri(backendLink+"/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
-                .bodyToMono(ResponseTemplate.class)
+                .bodyToMono(DepartmentResponseTemplate.class)
                 .block();
 
         if (response == null) {

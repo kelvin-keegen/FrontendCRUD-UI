@@ -59,7 +59,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("splash", SplashView.class, LineAwesomeIcon.FILE_POWERPOINT.create()));
         nav.addItem(
                 new SideNavItem("Create department", CreatedepartmentView.class, LineAwesomeIcon.BUILDING.create()));
-        nav.addItem(new SideNavItem("Update department", UpdatedepartmentView.class,
+        nav.addItem(new SideNavItem("Manage department", UpdatedepartmentView.class,
                 LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
         nav.addItem(new SideNavItem("Create employee", CreateemployeeView.class, LineAwesomeIcon.USER.create()));
         nav.addItem(new SideNavItem("Update employee", UpdateemployeeView.class,

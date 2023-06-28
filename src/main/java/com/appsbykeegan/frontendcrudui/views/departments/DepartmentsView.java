@@ -54,7 +54,6 @@ public class DepartmentsView extends Div {
         grid.addColumn(DepartmentModel::getDepartmentDescription).setHeader("departmentDescription").setAutoWidth(true);
         grid.addColumn(DepartmentModel::getDepartmentBudget).setHeader("departmentBudget").setAutoWidth(true);
         grid.addColumn(DepartmentModel::getDepartmentCreationDate).setHeader("departmentCreationDate").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getEmployees).setHeader("employees").setAutoWidth(true);
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
