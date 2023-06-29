@@ -1,12 +1,12 @@
 package com.appsbykeegan.frontendcrudui.views;
 
-import com.appsbykeegan.frontendcrudui.views.createdepartment.CreatedepartmentView;
-import com.appsbykeegan.frontendcrudui.views.createemployee.CreateemployeeView;
-import com.appsbykeegan.frontendcrudui.views.departments.DepartmentsView;
-import com.appsbykeegan.frontendcrudui.views.employees.EmployeesView;
+import com.appsbykeegan.frontendcrudui.views.department.CreateDepartmentView;
+import com.appsbykeegan.frontendcrudui.views.employee.CreateemployeeView;
+import com.appsbykeegan.frontendcrudui.views.department.DepartmentsView;
+import com.appsbykeegan.frontendcrudui.views.employee.EmployeesView;
 import com.appsbykeegan.frontendcrudui.views.splash.SplashView;
-import com.appsbykeegan.frontendcrudui.views.updatedepartment.UpdatedepartmentView;
-import com.appsbykeegan.frontendcrudui.views.updateemployee.UpdateemployeeView;
+import com.appsbykeegan.frontendcrudui.views.department.DepartmentManagementView;
+import com.appsbykeegan.frontendcrudui.views.employee.EmployeeManagementView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -56,15 +56,21 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("splash", SplashView.class, LineAwesomeIcon.FILE_POWERPOINT.create()));
+        nav.addItem(new SideNavItem("Splash", SplashView.class, LineAwesomeIcon.FILE_POWERPOINT.create()));
+
+        nav.addItem(new SideNavItem(""));
+
         nav.addItem(
-                new SideNavItem("Create department", CreatedepartmentView.class, LineAwesomeIcon.BUILDING.create()));
-        nav.addItem(new SideNavItem("Manage department", UpdatedepartmentView.class,
-                LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
-        nav.addItem(new SideNavItem("Create employee", CreateemployeeView.class, LineAwesomeIcon.USER.create()));
-        nav.addItem(new SideNavItem("Manage employee", UpdateemployeeView.class,
+                new SideNavItem("Create department", CreateDepartmentView.class, LineAwesomeIcon.BUILDING.create()));
+        nav.addItem(new SideNavItem("Manage department", DepartmentManagementView.class,
                 LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
         nav.addItem(new SideNavItem("Departments", DepartmentsView.class, LineAwesomeIcon.CITY_SOLID.create()));
+
+        nav.addItem(new SideNavItem(""));
+
+        nav.addItem(new SideNavItem("Create employee", CreateemployeeView.class, LineAwesomeIcon.USER.create()));
+        nav.addItem(new SideNavItem("Manage employee", EmployeeManagementView.class,
+                LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
         nav.addItem(new SideNavItem("Employees", EmployeesView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create()));
 
         return nav;

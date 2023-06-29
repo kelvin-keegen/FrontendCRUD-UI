@@ -1,4 +1,4 @@
-package com.appsbykeegan.frontendcrudui.views.departments;
+package com.appsbykeegan.frontendcrudui.views.department;
 
 import com.appsbykeegan.frontendcrudui.models.DepartmentModel;
 import com.appsbykeegan.frontendcrudui.service.DepartmentRestfulService;
@@ -8,7 +8,9 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -24,15 +26,27 @@ import java.util.List;
 public class DepartmentsView extends Div {
 
     private final DepartmentRestfulService departmentRestfulService;
-    private Grid<DepartmentModel> grid;
-
 
     public DepartmentsView(DepartmentRestfulService departmentRestfulService) {
         this.departmentRestfulService = departmentRestfulService;
         setSizeFull();
         addClassNames("departments-view");
 
-        VerticalLayout layout = new VerticalLayout(createGrid());
+        VerticalLayout layout = new VerticalLayout();
+
+        try {
+
+            layout.add(createGrid());
+
+        } catch (Exception exception) {
+
+            H3 information = new H3();
+            information.setText("API connection is unavailable! ⚠");
+            information.addClassNames(LumoUtility.Margin.Top.XLARGE, LumoUtility.Margin.Bottom.MEDIUM);
+            layout.setAlignItems(FlexComponent.Alignment.CENTER);
+            layout.add(information);
+        }
+
         layout.setSizeFull();
         layout.setPadding(false);
         layout.setSpacing(false);
@@ -40,21 +54,18 @@ public class DepartmentsView extends Div {
     }
     private Component createGrid() {
 
-        List<DepartmentModel> departmentModelList = new ArrayList<>();
+        List<DepartmentModel> departmentModelList = departmentRestfulService.getAllDepartments();
 
-        departmentModelList = departmentRestfulService.getAllDepartments();
+        Grid<DepartmentModel> grid = new Grid<>(DepartmentModel.class, false);
 
-        ArrayList<DepartmentModel> departmentModelArrayList = (ArrayList<DepartmentModel>) departmentModelList;
+        grid.addColumn("departmentId").setAutoWidth(true);
+        grid.addColumn("departmentName").setAutoWidth(true);
+        grid.addColumn("departmentFloorNumber").setAutoWidth(true);
+        grid.addColumn("departmentDescription").setAutoWidth(true);
+        grid.addColumn("departmentBudget").setAutoWidth(true);
+        grid.addColumn("departmentCreationDate").setAutoWidth(true);
 
-        grid = new Grid<>(DepartmentModel.class, false);
-        grid.setItems(departmentModelArrayList);
-        grid.addColumn(DepartmentModel::getDepartmentId).setHeader("departmentId").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getDepartmentName).setHeader("departmentName").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getDepartmentFloorNumber).setHeader("departmentFloorNumber").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getDepartmentDescription).setHeader("departmentDescription").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getDepartmentBudget).setHeader("departmentBudget").setAutoWidth(true);
-        grid.addColumn(DepartmentModel::getDepartmentCreationDate).setHeader("departmentCreationDate").setAutoWidth(true);
-
+        grid.setItems(departmentModelList);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
 

@@ -4,3 +4,5 @@
  | |___| |  | |_| | (_| |_____| |_| || |   / ___ \| |_) | |_) |
   \____|_|   \__,_|\__,_|      \___/|___| /_/   \_\ .__/| .__/ 
                                                   |_|   |_|    
+Built & Designed by AppsByKeegan
+Powered by Spring-Boot ${spring-boot.version}

@@ -1,4 +1,4 @@
-package com.appsbykeegan.frontendcrudui.views.createdepartment;
+package com.appsbykeegan.frontendcrudui.views.department;
 
 import com.appsbykeegan.frontendcrudui.models.records.DepartmentRequestBody;
 import com.appsbykeegan.frontendcrudui.service.DepartmentRestfulService;
@@ -12,24 +12,22 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 
 @PageTitle("Create department")
 @Route(value = "create/department", layout = MainLayout.class)
-public class CreatedepartmentView extends Div {
+@Slf4j
+public class CreateDepartmentView extends Div {
 
-    @Autowired
-    private DepartmentRestfulService departmentRestfulService;
+    private final DepartmentRestfulService departmentRestfulService;
 
     private TextField departmentName = new TextField("Department Name");
     private NumberField departmentFloorNumber = new NumberField("Floor Number");
@@ -39,7 +37,8 @@ public class CreatedepartmentView extends Div {
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    public CreatedepartmentView() {
+    public CreateDepartmentView(DepartmentRestfulService departmentRestfulService) {
+        this.departmentRestfulService = departmentRestfulService;
         addClassName("createdepartment-view");
 
         add(createTitle());
@@ -48,11 +47,13 @@ public class CreatedepartmentView extends Div {
 
         clearForm();
 
-        cancel.addClickListener(buttonClickEvent -> clearForm());
-        save.addClickListener(buttonClickEvent -> {
+            cancel.addClickListener(buttonClickEvent -> clearForm());
+            save.addClickListener(buttonClickEvent -> {
 
-            createDeptRestFunc();
-        });
+                createDeptRestFunc();
+
+            });
+
     }
 
     private Component createTitle() {
@@ -92,28 +93,38 @@ public class CreatedepartmentView extends Div {
 
     public void createDeptRestFunc() {
 
-        boolean isSuccessful = false;
+        try {
 
-        isSuccessful = departmentRestfulService.createDepartment(new DepartmentRequestBody(
-                departmentName.getValue(),
-                departmentFloorNumber.getValue().intValue(),
-                departmentDescription.getValue(),
-                BigDecimal.valueOf(departmentBudget.getValue())
-        ));
+            boolean isSuccessful = false;
 
-        if (isSuccessful) {
+            isSuccessful = departmentRestfulService.createDepartment(new DepartmentRequestBody(
+                    departmentName.getValue(),
+                    departmentFloorNumber.getValue().intValue(),
+                    departmentDescription.getValue(),
+                    BigDecimal.valueOf(departmentBudget.getValue())
+            ));
 
-            clearForm();
-            Notification notification = Notification.show("Entry Created!");
-            notification.setPosition(Notification.Position.BOTTOM_CENTER);
-            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            if (isSuccessful) {
 
-        } else if (!isSuccessful){
+                clearForm();
+                Notification notification = Notification.show("Entry Created!");
+                notification.setPosition(Notification.Position.BOTTOM_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+            } else if (!isSuccessful){
+
+                Notification notification = Notification.show("Creation Failed");
+                notification.setPosition(Notification.Position.BOTTOM_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+
+        } catch (Exception exception) {
+
+            log.error(exception.getMessage());
 
             Notification notification = Notification.show("Something went wrong!");
             notification.setPosition(Notification.Position.BOTTOM_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
-
 }

@@ -9,7 +9,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
-@PageTitle("splash")
+@PageTitle("Splash")
 @Route(value = "", layout = MainLayout.class)
 public class SplashView extends VerticalLayout {
 
@@ -20,10 +20,11 @@ public class SplashView extends VerticalLayout {
         img.setWidth("200px");
         add(img);
 
-        H2 header = new H2("This place intentionally left empty");
+        H2 header = new H2("This place is intentionally left empty");
         header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM);
         add(header);
-        add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
+        add(new Paragraph("Use the Navigation slider for some excitement! 🤗"));
+        add(new Paragraph("Built by AppsByKeegan powered by SpringBoot"));
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);

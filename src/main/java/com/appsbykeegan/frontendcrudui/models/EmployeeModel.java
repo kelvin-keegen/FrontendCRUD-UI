@@ -19,4 +19,8 @@ public class EmployeeModel {
     private String emailAddress;
     private DepartmentModel department;
 
+    public String getDepartmentName() {
+        return department.getDepartmentName();
+    }
+
 }
