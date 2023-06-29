@@ -95,9 +95,18 @@ public class CreateemployeeView extends Div {
 
     public void createEmployRestFunc() {
 
+        boolean isNullValues = false;
+
         try {
 
             boolean isSuccessful = false;
+
+            if (departmentName.getValue().isEmpty()
+                    || email.getValue().isEmpty()
+                    || employeeGender.getValue() == null
+                    || employeeRole.getValue() == null) {
+                isNullValues = true;
+            }
 
             isSuccessful = employeeRestfulService.createEmployee(new EmployeeRequestBody(
                             firstName.getValue(),
@@ -123,9 +132,16 @@ public class CreateemployeeView extends Div {
             }
         } catch (Exception exception) {
 
+            String errorMsg = "Something went wrong!";
+
+            if (isNullValues) {
+
+                errorMsg = "Please fill all fields!";
+            }
+
             log.error(exception.getMessage());
 
-            Notification notification = Notification.show("Something went wrong!");
+            Notification notification = Notification.show(errorMsg);
             notification.setPosition(Notification.Position.BOTTOM_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }

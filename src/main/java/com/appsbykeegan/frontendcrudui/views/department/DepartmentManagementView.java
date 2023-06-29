@@ -40,6 +40,7 @@ public class DepartmentManagementView extends Div {
     private Button save = new Button("Update");
     private Button delete = new Button("Delete Department");
 
+
     public DepartmentManagementView(DepartmentRestfulService departmentRestfulService) {
         this.departmentRestfulService = departmentRestfulService;
         addClassName("updatedepartment-view");

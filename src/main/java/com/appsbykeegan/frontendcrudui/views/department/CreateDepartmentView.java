@@ -62,7 +62,7 @@ public class CreateDepartmentView extends Div {
 
     private Component createFormLayout() {
 
-        departmentDescription.setPlaceholder("Write department info here...");
+        departmentDescription.setPlaceholder("(Optional) Write department info here...");
         departmentBudget.setItems(1000.00,10000.00,100000.00,1000000.00);
 
         FormLayout formLayout = new FormLayout();
@@ -93,9 +93,18 @@ public class CreateDepartmentView extends Div {
 
     public void createDeptRestFunc() {
 
+        boolean isNullValues = false;
+
         try {
 
             boolean isSuccessful = false;
+
+
+            if (departmentName.getValue().isEmpty()
+                    || departmentFloorNumber.isEmpty()
+                    || departmentBudget.getValue() == null) {
+                isNullValues = true;
+            }
 
             isSuccessful = departmentRestfulService.createDepartment(new DepartmentRequestBody(
                     departmentName.getValue(),
@@ -120,9 +129,16 @@ public class CreateDepartmentView extends Div {
 
         } catch (Exception exception) {
 
+            String errorMsg = "Something went wrong!";
+
+            if (isNullValues) {
+
+                errorMsg = "Please fill all fields!";
+            }
+
             log.error(exception.getMessage());
 
-            Notification notification = Notification.show("Something went wrong!");
+            Notification notification = Notification.show(errorMsg);
             notification.setPosition(Notification.Position.BOTTOM_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
