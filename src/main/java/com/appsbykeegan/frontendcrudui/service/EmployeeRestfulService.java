@@ -2,8 +2,9 @@ package com.appsbykeegan.frontendcrudui.service;
 
 import com.appsbykeegan.frontendcrudui.models.*;
 import com.appsbykeegan.frontendcrudui.models.records.EmployeeRequestBody;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -12,13 +13,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class EmployeeRestfulService {
 
     private final WebClient.Builder webClient;
 
-    private String backendLink = "http://localhost:7070/employee";
+    @Value(value = "${backend.url.link}")
+    private String apiHost;
+
+    private String backendLink;
+
+
+    @PostConstruct
+    public void postConstruct() {
+
+        backendLink = "http://"+apiHost+"/employee";
+    }
 
     public EmployeeModel findEmployee(String email) {
 
@@ -37,9 +47,6 @@ public class EmployeeRestfulService {
         if (statusCode != 200) {
             return null;
         }
-
-        log.info(response.getData().toString());
-        log.info(response.getData().getDepartment().getDepartmentName());
 
         return response.getData();
     }

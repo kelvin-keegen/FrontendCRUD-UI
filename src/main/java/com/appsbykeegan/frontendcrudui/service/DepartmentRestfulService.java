@@ -4,15 +4,16 @@ import com.appsbykeegan.frontendcrudui.models.DepartmentModel;
 import com.appsbykeegan.frontendcrudui.models.DepartmentListResponseTemplate;
 import com.appsbykeegan.frontendcrudui.models.DepartmentResponseTemplate;
 import com.appsbykeegan.frontendcrudui.models.records.DepartmentRequestBody;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
 @Service
@@ -22,7 +23,17 @@ public class DepartmentRestfulService {
 
     private final WebClient.Builder webClient;
 
-    private String backendLink = "http://localhost:7070/department";
+    @Value(value = "${backend.url.link}")
+    private String apiHost;
+
+    private String backendLink;
+
+
+    @PostConstruct
+    public void postConstruct() {
+
+        backendLink = "http://"+apiHost+"/department";
+    }
 
     public DepartmentModel findDepartment(String deptName) {
 
